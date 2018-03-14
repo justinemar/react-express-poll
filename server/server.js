@@ -21,7 +21,7 @@ server.set(viewsDir);
 server.set('view engine', 'ejs');
 server.use(cookieSession({
     name: 'session',
-    keys: ['3x890fmlsiz7dngmdiad2989', '3x890fkiaydj102m3foaldp'],
+    keys: [process.env.KEY1, process.env.KEY2],
     httpOnly: false
 }))
 
