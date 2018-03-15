@@ -39,6 +39,7 @@ class Register extends React.Component{
     onHandleChange = (e) => {
         if(e.target.name === 'email'){
         const email = e.target.value;
+        //client validation
         const regEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
         const properEmail = regEmail.test(email) ? null : 'Email is invalid!';
             this.setState({
@@ -70,9 +71,9 @@ class Register extends React.Component{
                 :
                 null
             }
-                <input type="email" name="email" placeholder="johndoe@mail.com" onChange={this.onHandleChange}/>
-                <input type="password" name="password" ref={(input) => this.confirmPass = input}/>
-                <input type="password" name="confirm_password" onChange={this.onHandleChange}/>
+                <input type="email" name="email" placeholder="Johndoe@mail.com" onChange={this.onHandleChange}/>
+                <input type="password" placeholder="Password" name="password" ref={(input) => this.confirmPass = input}/>
+                <input type="password" placeholder="Confirm Password" name="confirm_password" onChange={this.onHandleChange}/>
                 <button>Submit</button>
             </form>
         </div>

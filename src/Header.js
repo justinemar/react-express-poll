@@ -1,24 +1,48 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import Cookies from 'js-cookie';
 class Header extends React.Component{
-    state = {
-        authed: Cookies.get('session') || false
-    }
     
+    
+    logOut = () => {
+        
+        fetch('/api/logout', {
+            method: 'POST',
+            credentials: 'same-origin',
+            body: {},
+            headers: {
+                'Content-type': 'application/json' ,
+                'Content-length': 0
+            }
+        })
+            .then(res => res.json())
+                .then(res => {
+                    console.log(res.unauth)
+                    if(res.unauth){
+                        this.props.history.push('/login')
+                    }
+                })
+            .catch(err => console.log(err))
+    }
     render(){
-        const { authed } =  this.state;
         return (
             <header>
                 <h3>React Poll</h3>
-                <div className="actions-bar">
+                <div className="actions-wrapper">
                     <Link to="/home">Home</Link>
-                    { authed ? <button>Logout</button> :
-                    <div>
-                        <Link to="/register">Register</Link> 
-                        <Link to="/login">Login</Link>
-                    </div>
-                    }
+                    { Cookies.get('session') 
+                        ?
+                        <div className="actions-bar">
+                            <Link to="/mypolls">My Polls</Link>
+                            <Link to="/newpoll">Create Poll</Link>
+                            <button onClick={this.logOut}>Logout</button>
+                        </div>
+                        :
+                            <div className="actions-bar">
+                                <Link to="/register">Register</Link> 
+                                <Link to="/login">Login</Link>
+                            </div>
+                        }
                 </div>
                 <div className="clearfix"></div>
             </header>

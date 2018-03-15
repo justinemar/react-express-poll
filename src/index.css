@@ -63,15 +63,20 @@ header h3{
 }
 
 
-.actions-bar{
+.actions-wrapper{
     float: right;
     padding: 15px;
 }
-.actions-bar a{
+.actions-wrapper a{
     margin-right: 40px;
     font-size: 19px;
     text-decoration: none;
     color: #848484;
+}
+
+
+.actions-bar{
+    display: inline-block;
 }
 
 .clearfix{

@@ -25,6 +25,11 @@ server.use(cookieSession({
     httpOnly: false
 }))
 
+server.use((req, res, next) => {
+    console.log('THIS ONE?', req.session.id)
+    next();
+})
+
 MongoClient.connect(dbURL, (err, client) => {
     if(err) throw err;
     db = client.db('test-authentication');
@@ -59,6 +64,25 @@ server.post('/api/register', validateMiddle, (req, res) => {
     })
 })
 
+
+server.post('/api/checkAuth', (req, res) => {
+    if(req.session.id){
+        console.log(req.session.id)
+    } else {
+        res.status(500).send('Internal Server Error')
+    }
+});
+
+server.post('/api/logout', (req, res) => {
+    if(req.session.id){
+        req.session = null;
+        res.json({
+            unauth: true}).end()
+    } else {
+        res.status(500).send('Internal Server Error')
+    }
+})
+
 server.post('/api/login', (req, res) => {
     db.collection('users').findOne({
         email: req.body.email
@@ -67,15 +91,16 @@ server.post('/api/login', (req, res) => {
         if(succ && succ.email == req.body.email && succ.password == req.body.password){
             req.session.id = succ._id;
             res.json({
-                message: 'Success'
+                authed: true
             })
         } else {
             res.json({
-                message: 'Invalid email or password!'
+                message: 'Invalid Email or Password'
             })
         }
     })
 })
+
 
 function validateMiddle(req, res, next){
     if(validator.isEmail(req.body.email)){
@@ -86,6 +111,7 @@ function validateMiddle(req, res, next){
         })
     }
 }
+
 
 server.get('*', function(req, res, next) {
   var err = new Error();
