@@ -1,5 +1,6 @@
 import React from 'react';
 import './index.css';
+import {Form} from './Form';
 
 class Register extends React.Component{
     state = {
@@ -10,10 +11,10 @@ class Register extends React.Component{
     
     
     
-    onAuth = (e) => {
+    onRegister = (e) => {
         e.preventDefault();
-        const email = e.target.email.value;
-        const password = e.target.password.value;
+        const email = this.email.value
+        const password = this.password.value
         console.log(email, password)
         if(!this.state.validate.message){
             fetch('/api/register', {
@@ -49,7 +50,7 @@ class Register extends React.Component{
             })
         } else if(e.target.name == 'confirm_password'){
             const password = e.target.value;
-            const passed = password === this.confirmPass.value ? null : "Password doesn't match!"
+            const passed = password === this.password.value ? null : "Password doesn't match!"
             this.setState({
                 validate: {
                     message: passed
@@ -64,18 +65,11 @@ class Register extends React.Component{
         const { validate } = this.state;
         return (
         <div className="form-container">
-            <h1> Register </h1>
-            <form onSubmit={this.onAuth}>
-            {validate.message ? 
-                <p className="error-p">Error: {validate.message}</p>
-                :
-                null
-            }
-                <input type="email" name="email" placeholder="Johndoe@mail.com" onChange={this.onHandleChange}/>
-                <input type="password" placeholder="Password" name="password" ref={(input) => this.confirmPass = input}/>
-                <input type="password" placeholder="Confirm Password" name="confirm_password" onChange={this.onHandleChange}/>
-                <button>Submit</button>
-            </form>
+        <Form h1="Register" 
+            email={i => this.email = i}
+                password={i => this.password = i} funcInit={this.onRegister}
+                    err={validate} handleChange={this.onHandleChange}
+                    />
         </div>
             )
     }

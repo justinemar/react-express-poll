@@ -26,8 +26,10 @@ server.use(cookieSession({
 }))
 
 server.use((req, res, next) => {
-    console.log('THIS ONE?', req.session.id)
-    next();
+    if(req.session.id){
+        console.log(req.session.id)
+    }
+            next()
 })
 
 MongoClient.connect(dbURL, (err, client) => {
@@ -64,12 +66,16 @@ server.post('/api/register', validateMiddle, (req, res) => {
     })
 })
 
-
 server.post('/api/checkAuth', (req, res) => {
     if(req.session.id){
-        console.log(req.session.id)
+        res.json({
+            valid: true
+        })
+        res.end()
     } else {
-        res.status(500).send('Internal Server Error')
+        res.json({
+            message: 'Not set'
+        })
     }
 });
 
@@ -77,7 +83,7 @@ server.post('/api/logout', (req, res) => {
     if(req.session.id){
         req.session = null;
         res.json({
-            unauth: true}).end()
+            unauth: true})
     } else {
         res.status(500).send('Internal Server Error')
     }

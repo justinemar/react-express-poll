@@ -3,9 +3,7 @@ import { Link, Redirect } from 'react-router-dom';
 import Cookies from 'js-cookie';
 class Header extends React.Component{
     
-    
-    logOut = () => {
-        
+    init = () => {
         fetch('/api/logout', {
             method: 'POST',
             credentials: 'same-origin',
@@ -17,20 +15,22 @@ class Header extends React.Component{
         })
             .then(res => res.json())
                 .then(res => {
-                    console.log(res.unauth)
-                    if(res.unauth){
-                        this.props.history.push('/login')
-                    }
+                    return true;
                 })
             .catch(err => console.log(err))
     }
+    logOut = () => {
+        const { unAuthUser } = this.props;
+        unAuthUser(this.init)
+    }
     render(){
+        const { valid } = this.props;
         return (
             <header>
                 <h3>React Poll</h3>
                 <div className="actions-wrapper">
                     <Link to="/home">Home</Link>
-                    { Cookies.get('session') 
+                    { valid
                         ?
                         <div className="actions-bar">
                             <Link to="/mypolls">My Polls</Link>

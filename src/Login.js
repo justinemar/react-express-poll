@@ -1,6 +1,6 @@
 import React from 'react';
 import Cookies from 'js-cookie';
-
+import {Form }from './Form';
 
 
 
@@ -10,17 +10,14 @@ class Login extends React.Component{
             message: null
         }
     }
-    
-    componentWillMount(){
-        if(Cookies.get('session'))
-            this.props.history.push('/home')
-    }
-    
-    onAuth = (e) => {
-        e.preventDefault();
-        const email = e.target.email.value;
-        const password = e.target.password.value;
-        fetch('/api/login', {
+
+
+    init = () => {
+        const { history } = this.props;
+        const { authUser } = this.props;
+        const email = this.email.value
+        const password = this.password.value
+       fetch('/api/login', {
             method: 'POST',
             credentials: 'same-origin',
             body: JSON.stringify({email: email , password: password}),
@@ -28,7 +25,8 @@ class Login extends React.Component{
         }).then(res => res.json())
         .then(res => {
             if(res.authed){
-                this.props.history.push("/home")
+                authUser()
+                history.push('/home');
             } else {
                 this.setState({
                     validate: {
@@ -36,27 +34,21 @@ class Login extends React.Component{
                     }
                 })
             }
-            
-            return res;
         }).catch(err => console.log(err));
+    }
+    
+    onAuth = (e) => {
+        e.preventDefault();
+        const { authUser } = this.props;
+        this.init();
     }
     
     render(){
         const { validate } = this.state;
         return (
-        <div className="form-container">
-            <h1> Login </h1>
-            <form onSubmit={this.onAuth}>
-            { validate.message ? 
-                <p className="error-p">Error: {validate.message}</p>
-                :
-                null
-            }
-                <input type="email" name="email" placeholder="Johndoe@mail.com"/>
-                <input type="password" name="password" placeholder="Password"/>
-                <button>Submit</button>
-            </form>
-        </div>
+        <Form h1="Login" email={i => this.email = i} 
+            password={i => this.password = i} funcInit={this.onAuth}
+                err={validate}/>
             )
     }
 }
