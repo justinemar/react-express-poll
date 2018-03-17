@@ -1,16 +1,25 @@
 import React from 'react';
 import Cookies from 'js-cookie';
-import {Form }from './Form';
+import {Form }from '../Form';
 
 
 
 class Login extends React.Component{
     state = {
         validate: {
-            message: null
+            message: null,
+            className: null
         }
     }
-
+    
+    
+    componentWillReceiveProps(props){
+        const { history , location } = this.props;
+        const redirTo = location.state !== undefined ? location.state.from.pathname : '/public';
+            history.replace({
+                pathname: redirTo
+            })
+    }
 
     init = () => {
         const { history } = this.props;
@@ -30,7 +39,8 @@ class Login extends React.Component{
             } else {
                 this.setState({
                     validate: {
-                        message: res.message
+                        message: res.message,
+                        className: res.type
                     }
                 })
             }

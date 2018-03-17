@@ -5,12 +5,24 @@
 }
 
 .error-p{
+    margin: 10px;
     width: 100%;
     text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.76);
     font-weight: bold;
     color: white;
     margin-left: 6px;
     background: #f10000;
+    padding: 5px;
+    font-family: 'Segoe UI';
+}
+.success-p{
+    margin: 10px;
+    width: 100%;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.76);
+    font-weight: bold;
+    color: white;
+    margin-left: 6px;
+    background: green;
     padding: 5px;
     font-family: 'Segoe UI';
 }
@@ -21,9 +33,12 @@ form{
 }
 
 form input{
+    border-radius: 10px;
     width: 100%;
     padding: 10px;
     margin: 5px;
+    border: 1px solid rgba(152, 152, 152, 0.25);
+    outline: 0;
 }
 
 
@@ -77,6 +92,14 @@ header h3{
 
 .actions-bar{
     display: inline-block;
+}
+
+.actions-bar button{
+    border: 0;
+    padding: 5px;
+    background: #f18637;
+    color: #fff;
+    font-weight: 700;
 }
 
 .clearfix{

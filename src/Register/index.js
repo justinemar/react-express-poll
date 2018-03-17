@@ -1,11 +1,12 @@
 import React from 'react';
-import './index.css';
-import {Form} from './Form';
+import '../index.css';
+import {Form} from '../Form';
 
 class Register extends React.Component{
     state = {
         validate: {
-            message: null
+            message: null,
+            className: null
         }
     }
     
@@ -15,7 +16,6 @@ class Register extends React.Component{
         e.preventDefault();
         const email = this.email.value
         const password = this.password.value
-        console.log(email, password)
         if(!this.state.validate.message){
             fetch('/api/register', {
                 method: 'POST',
@@ -28,7 +28,8 @@ class Register extends React.Component{
             .then(res => {
                 this.setState({
                     validate: {
-                        message: res.message
+                        message: res.message,
+                        className: res.type
                     }
                 })
                 return res;
@@ -45,7 +46,8 @@ class Register extends React.Component{
         const properEmail = regEmail.test(email) ? null : 'Email is invalid!';
             this.setState({
                 validate: {
-                    message: properEmail
+                    message: properEmail,
+                    className: 'error-p'
                 }
             })
         } else if(e.target.name == 'confirm_password'){
@@ -53,7 +55,8 @@ class Register extends React.Component{
             const passed = password === this.password.value ? null : "Password doesn't match!"
             this.setState({
                 validate: {
-                    message: passed
+                    message: passed,
+                    className: 'error-p'
                 }
             })
         } else {
