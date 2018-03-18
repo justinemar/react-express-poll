@@ -14,6 +14,7 @@ server.listen(8080);
 server.use(express.static(publicDir));
 server.use(bodyParser.urlencoded({ extended: false }));
 server.use(bodyParser.json());
+server.use(bodyParser.text({ type: 'text/plain' }))
 server.use(cookieSession({
     name: 'session',
     keys: [process.env.KEY1, process.env.KEY2],

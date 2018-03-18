@@ -1,0 +1,43 @@
+
+
+
+.poll-details{
+        margin: 0 auto;
+    max-width: 500px;
+}
+
+.poll-details h2{
+        text-transform: capitalize;
+    font-family: sans-serif;
+    color: #545454;
+}
+
+.poll-vote-action{
+        margin: 10px;
+    max-width: 250px;
+}
+
+.poll-choices-wrapper{
+        padding: 5px;
+}
+
+.poll-choices-wrapper select{
+        width: 100%;
+    padding: 5px;
+    border-radius: 5px;
+    color: orange;
+    outline: 0;
+}
+
+.poll-btn-wrapper{
+        padding: 5px;
+}
+
+.poll-btn-wrapper button{
+       padding: 10px;
+    width: 100%;
+    border: 0;
+    background: #505050;
+    color: #fff;
+    font-size: 15px; 
+}

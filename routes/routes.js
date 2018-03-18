@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const bodyParser = require("body-parser");
 const path = require("path");
 const publicDir = path.resolve(__dirname, '../public');
 const validator = require("validator");
 const db = require("../connection/mongo").getDB;
 const init = require("../connection/mongo");
-
+const parseText = bodyParser.text({ type: 'text/plain' })
 init.connect(() => {});
 
 function validateMiddle(req, res, next){
@@ -23,6 +24,10 @@ function validateMiddle(req, res, next){
 router.get('/', (req, res) => {
     res.sendFile(path.join(publicDir, 'index.html'));
 })
+
+router.post('/api/vote', parseText, (req, res) => {
+    res.send(req.body)
+});
 
 router.post('/api/register', validateMiddle, (req, res) => {
     db().collection('users').findOne({
@@ -58,7 +63,7 @@ router.post('/api/newpoll',  (req, res, next) => {
         //-//-//-//-//-//-//-//-//-//-//-//-//-//-//
         const setData = new Promise((resolve, reject) => {
             db().collection('users').findOne({
-                _id: require("mongodb").ObjectId(req.session.id)
+                _id: require("mongodb").ObjectId(req.session.id._id)
             }, (err, succ) => {
                 if(err) {
                     reject(err)
@@ -80,10 +85,12 @@ router.post('/api/newpoll',  (req, res, next) => {
               const pollData = {};
                 pollData['author'] = data.email;
                 pollData['title'] = escapeTitle;
-                pollData['options'] = escapeOptions.split(',');
+                pollData['options'] = [];
+                escapeOptions.split(',').forEach(i => {
+                    pollData['options'].push({key: i, votes: 0})
+                })
                 return pollData;
             }).then(pollData => {
-                console.log(pollData);
                 db().collection('polls').save(pollData, (err, succ) => {
                     if(err) throw err;
                     
@@ -125,7 +132,8 @@ router.post('/api/login', (req, res) => {
     }, (err, succ) => {
         if(err) throw err;
         if(succ && succ.email == req.body.email && succ.password == req.body.password){
-            req.session.id = succ._id;
+            delete succ.password;
+            req.session.id = succ;
             res.json({
                 authed: true
             })
@@ -150,5 +158,37 @@ router.post('/api/checkAuth', (req, res) => {
     }
 });
 
+
+function findByEmail(email){
+    return new Promise((resolve, reject) => {
+        db().collection('polls').find({
+            author: email
+        }).toArray((err, succ) => {
+            if(err) {
+              reject(err);
+            }
+            
+            if(succ){
+                resolve(succ)
+            }
+        })
+    });
+}
+
+
+router.post('/api/mypolls', (req, res) => {
+    if(req.session.id){
+        findByEmail(req.session.id.email)
+        .then(data => {
+            res.json({
+                polls: data
+            })
+        })
+    } else {
+        res.json({
+            message: 'Not set'
+        })
+    }
+});
 
 module.exports = router;
