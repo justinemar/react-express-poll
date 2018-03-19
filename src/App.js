@@ -4,7 +4,6 @@ import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import Register from './Register/index';
 import Login from './Login/index';
 import NewPoll from './NewPoll/index';
-import Cookies from 'js-cookie';
 import Loading from './Widget/Loading.jsx';
 import Polls from './Polls';
 import MyPolls from './MyPolls';

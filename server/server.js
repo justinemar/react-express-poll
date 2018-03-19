@@ -36,7 +36,7 @@ server.use(function(err, req, res, next) {
   res.status(404);
   res.send(err.message || "This is not how it's supposed to happen" );
 });
-server.listen(8080);
+server.listen(process.env.port || 8080);
 
 
 
