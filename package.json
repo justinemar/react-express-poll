@@ -10,6 +10,9 @@
     "build": "webpack --watch --config webpack.config.js --mode development"
   },
   "keywords": [],
+   "engines" : { 
+    "node" : "^6.11.2" 
+  },
   "author": "",
   "license": "ISC",
   "babel": {
