@@ -5,8 +5,8 @@ i chose react for frontend with express and mongodb
 
 ## Progress
 
- ~~Setup react-express-mongodb environment from scratch
- Build necessary server routes
+ - ~~Setup react-express-mongodb environment from scratch
+ -  Build necessary server routes
  Implement react routes 
  Allow login and registration
  Build protected react routes
