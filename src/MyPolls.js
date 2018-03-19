@@ -1,42 +1,42 @@
 import React from 'react';
 import Spinner from './Spinner.gif';
-import { Link } from 'react-router-dom';
-
+import { Link, Route } from 'react-router-dom';
+import Poll from './Poll';
 
 
 export default class MyPolls extends React.Component{
     
-    // state = {
-    //     pollData: null
-    // }
-    
-    componentDidMount(){
-        // fetch('/api/mypolls', {
-        //     method: 'POST',
-        //     credentials: 'same-origin',
-        //     body: {},
-        //     headers: {'Content-Type': 'text/plain', 'Content-length': 0}
-        // }).then(res => res.json())
-        // .then(res => {
-        //     if(res){
-        //       this.setState({
-        //         pollData: res
-        //       })
-        //     } else {
-        //       this.setState({
-        //         pollData: null
-        //       })
-        //     }
-        // })
-        // .catch(err => console.log(err))
+    state = {
+        polls: null
     }
     
+    shouldComponentUpdate(nextProps,nextState){
+        return this.state.polls !== nextState;
+    }
+    
+    getData = () => {
+        fetch('/api/mypolls', { method: 'GET' , credentials: 'same-origin'})
+         .then(polls => polls.json())
+              .then(polls => {
+                 this.setState({
+                     polls: polls.polls
+                 })
+        }).catch(err => err);     
+    }
+    
+    componentDidMount(){
+        this.getData();
+    }
+
     render(){
-        const { match, polls } = this.props;
-        const userPolls = polls ? polls.map(i => {
+        const { match } = this.props;
+        const { polls } = this.state;
+        const userPolls = polls ? polls.map((i, index) => {
             const slug = i._id;
             return (
-               <Link to={`polls/${slug}`} params={{data: 'test'}}>
+               <Link key={index} to={{
+                    pathname: `${match.url}/${slug}`, 
+                    state: {data: polls}}}>
                     <div className="poll-container">
                         <h2> { i.title } </h2>
                     </div>
@@ -44,10 +44,15 @@ export default class MyPolls extends React.Component{
                 )
         }) : <img src={Spinner}/>
         return (
-            <div>
+        <div>
+            <div id="poll-list">
                 <h1> My Polls </h1>
-                {userPolls}
+                    {userPolls}
             </div>
+                <Route path={`${match.url}/:poll`}
+                    render={(props) => <Poll  getData={this.getData} polls={polls} {...props}/>}
+                />
+        </div>
             )
     }
 }

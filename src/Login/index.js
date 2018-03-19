@@ -35,7 +35,10 @@ class Login extends React.Component{
         .then(res => {
             if(res.authed){
                 authUser()
-                history.push('/home');
+                history.replace({
+                    pathname: '/polls',
+                    data: true
+                })
             } else {
                 this.setState({
                     validate: {

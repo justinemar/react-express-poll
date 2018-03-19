@@ -10,38 +10,34 @@ const server = express();
 
 
 
-server.listen(8080);
 server.use(express.static(publicDir));
 server.use(bodyParser.urlencoded({ extended: false }));
 server.use(bodyParser.json());
-server.use(bodyParser.text({ type: 'text/plain' }))
 server.use(cookieSession({
     name: 'session',
     keys: [process.env.KEY1, process.env.KEY2],
     httpOnly: false
 }));
+
+
+
 server.use('/', router);
+server.get('*', function(req, res, next) {
+  var err = new Error();
+  err.status = 404;
+  next(err);
+});
 
-
-// server.use((req, res, next) => {
-//     if(req.session.id){
-//         console.log(req.session.id);
-//     }
-//     next();
-// });
-
-// server.get('*', function(req, res, next) {
-//   var err = new Error();
-//   err.status = 404;
-//   next(err);
-// });
-
-// server.use(function(err, req, res, next) {
-//   if(err.status !== 404) {
-//     return next();
-//   }
+server.use(function(err, req, res, next) {
+  if(err.status !== 404) {
+    return next();
+  }
  
-//   res.status(404);
-//   res.send(err.message || "This is not how it's supposed to happen" );
-// });
+  res.status(404);
+  res.send(err.message || "This is not how it's supposed to happen" );
+});
+server.listen(8080);
+
+
+
 

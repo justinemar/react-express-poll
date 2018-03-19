@@ -1,12 +1,25 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 
 
 
 
 
 export default class Polls extends React.Component {
+
     render(){
-        return <h1> PUBLIC </h1>
+        const { match, polls } = this.props;
+        const pollsList = polls ? polls.map(i => (
+            <Link to={`${match.url}/${i._id}`}>
+                <div className="poll">
+                    <h1> {i.title} </h1>
+                </div>
+            </Link>
+        )) : null
+        return (
+            <div id="poll-list-wrapper">
+              {pollsList}
+            </div>
+            )
     }
 }

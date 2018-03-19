@@ -1,12 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const bodyParser = require("body-parser");
 const path = require("path");
 const publicDir = path.resolve(__dirname, '../public');
 const validator = require("validator");
 const db = require("../connection/mongo").getDB;
 const init = require("../connection/mongo");
-const parseText = bodyParser.text({ type: 'text/plain' })
 init.connect(() => {});
 
 function validateMiddle(req, res, next){
@@ -20,13 +18,67 @@ function validateMiddle(req, res, next){
     }
 }
 
+function findByEmail(email){
+    return new Promise((resolve, reject) => {
+        db().collection('polls').find({
+            author: email
+        }).toArray((err, succ) => {
+            if(err) {
+              reject(err);
+            }
+            
+            if(succ){
+                resolve(succ)
+            }
+        })
+    });
+}
+
 
 router.get('/', (req, res) => {
     res.sendFile(path.join(publicDir, 'index.html'));
 })
 
-router.post('/api/vote', parseText, (req, res) => {
-    res.send(req.body)
+
+router.get('/api/mypolls', (req, res) => {
+    if(req.session.id){
+        findByEmail(req.session.id.email)
+            .then(data => {
+                res.json({
+                    polls: data
+                })
+            })
+    } else {
+        res.json({
+            message: 'Not set'
+        })
+    }
+});
+
+router.get('/api/polls', (req, res) => {
+    db().collection('polls').find({}).toArray((err, succ) => {
+        if(err) throw err;
+        
+        console.log(succ)
+        res.send(succ)
+    });
+});
+
+router.post('/api/vote', (req, res) => {
+    const id = req.body.pollID;
+    const vote = req.body.vote;
+    console.log(id, vote);
+        if(req.session.id){
+        db().collection('polls').update(
+            { _id:  require("mongodb").ObjectId(id), "options.key": vote },
+           { $inc: { "options.$.votes" : 1 } }
+        )
+            res.send('ok')
+        } else {
+            res.json({
+                message: 'Unauthorized'
+            })
+        }
 });
 
 router.post('/api/register', validateMiddle, (req, res) => {
@@ -158,37 +210,5 @@ router.post('/api/checkAuth', (req, res) => {
     }
 });
 
-
-function findByEmail(email){
-    return new Promise((resolve, reject) => {
-        db().collection('polls').find({
-            author: email
-        }).toArray((err, succ) => {
-            if(err) {
-              reject(err);
-            }
-            
-            if(succ){
-                resolve(succ)
-            }
-        })
-    });
-}
-
-
-router.post('/api/mypolls', (req, res) => {
-    if(req.session.id){
-        findByEmail(req.session.id.email)
-        .then(data => {
-            res.json({
-                polls: data
-            })
-        })
-    } else {
-        res.json({
-            message: 'Not set'
-        })
-    }
-});
 
 module.exports = router;

@@ -1,43 +1,116 @@
 
 
+#poll-list{
+    float: left;
+    left: 20px;
+    position: relative;
+    color: #ffffff;
+}
 
+#poll-list h1{
+    color: #00caec;
+    background: black;
+    text-align: center;
+    font-family: 'Segoe UI';
+}
+
+#poll-list a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.poll-container{
+    background: rgba(0, 0, 0, 0.47);
+    padding: 10px;
+    border-bottom: 1px solid rgba(234, 234, 234, 0.22);
+}
+
+.poll-container:hover{
+    background: rgba(0, 202, 236, 0.52);
+}
+
+.poll-container h2{
+    text-transform: capitalize;
+    font-family: 'Segoe UI';
+}
 .poll-details{
-        margin: 0 auto;
-    max-width: 500px;
+    margin: 0 auto;
+    float: right;
+    position: relative;
+    left: -50px;
 }
 
 .poll-details h2{
-        text-transform: capitalize;
+    text-transform: capitalize;
     font-family: sans-serif;
-    color: #545454;
+    color: #ffffff;
 }
 
 .poll-vote-action{
-        margin: 10px;
+    margin: 10px;
     max-width: 250px;
 }
 
 .poll-choices-wrapper{
-        padding: 5px;
+    padding: 5px;
 }
 
+.poll-choices-wrapper h5{
+    padding: 5px;
+    color: #00caec;
+    font-weight: bold;
+    font-family: 'Segoe UI';
+}
+
+
 .poll-choices-wrapper select{
-        width: 100%;
+    width: 100%;
     padding: 5px;
     border-radius: 5px;
-    color: orange;
+    color: #00caec;
     outline: 0;
 }
 
 .poll-btn-wrapper{
-        padding: 5px;
+    padding: 5px;
 }
 
 .poll-btn-wrapper button{
-       padding: 10px;
+    padding: 10px;
     width: 100%;
     border: 0;
-    background: #505050;
+    background: #000000;
     color: #fff;
-    font-size: 15px; 
+    font-size: 15px;
+    outline: 0;
+}
+
+.poll-btn-wrapper button:hover{
+    background: #252525;
+}
+
+.recharts-legend-item-text{
+    color: #ffffff;
+}
+
+#poll-list-wrapper a{
+    color: #e6e6e6;
+}
+
+#poll-list-wrapper a:hover{
+  color: #737373;  
+}
+
+.poll{
+    background: white;
+    padding: 10px;
+    color: #37b4f1;
+    text-transform: uppercase;
+    font-family: sans-serif;
+    font-size: 11px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.poll:hover{
+    background: black;
 }

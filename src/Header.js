@@ -29,7 +29,7 @@ class Header extends React.Component{
             <header>
                 <h3>React Poll</h3>
                 <div className="actions-wrapper">
-                    <Link to="/home">Home</Link>
+                    <Link to="/polls">Home</Link>
                     { valid
                         ?
                         <div className="actions-bar">
