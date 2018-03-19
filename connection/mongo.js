@@ -7,6 +7,7 @@ var db;
 module.exports = {
     connect: function(cb){
         MongoClient.connect(dbURL, (err, client) => {
+            if(err) throw err;
             db = client.db('test-authentication');
             return cb(err)
         })
