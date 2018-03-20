@@ -59,7 +59,7 @@ router.get('/api/polls', (req, res) => {
     db().collection('polls').find({}).toArray((err, succ) => {
         if(err) throw err;
         
-        console.log(succ)
+
         res.send(succ)
     });
 });

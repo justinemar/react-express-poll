@@ -41,13 +41,19 @@ class App extends React.Component{
             }
         })
         .catch(err => err);
-    fetch('/api/polls', { method: 'GET', credentials: 'same-origin'})
-      .then(res => res.json())
-      .then(res => {
-          this.setState({
-              polls: res
-          })
-      }).catch(err => err);
+        this.renewData();
+    }
+    
+    
+    
+    renewData = () => {
+      fetch('/api/polls', { method: 'GET', credentials: 'same-origin'})
+        .then(res => res.json())
+        .then(res => {
+            this.setState({
+                polls: res
+            })
+        }).catch(err => err);
     }
     
     authUser = (cb) => {
@@ -72,10 +78,10 @@ class App extends React.Component{
         <Loading/> : null }
           <HeaderRoute valid={valid} unAuthUser={this.unAuthUser}/>
           <Route exact path="/polls" render={(props) => <Polls polls={polls} {...props}/>}/>
-          <Route path="/polls/:poll" render={(props) => <PublicPolls polls={polls} {...props}/>}/>
+          <Route path="/polls/:poll" render={(props) => <PublicPolls polls={polls} renewData={this.renewData} {...props}/>}/>
           <Route path="/register" component={Register}/>
           <Route path="/login"  render={(props) => <Login authUser={this.authUser} valid={valid} {...props}/>} />
-          <ProtectedRoute valid={valid} path="/mypolls" component={MyPolls}/>
+          <ProtectedRoute renewData={this.renewData} polls={polls} valid={valid} path="/mypolls" component={MyPolls}/>
           <ProtectedRoute valid={valid} path="/newpoll" component={NewPoll}/>
         </div>
             );
@@ -83,12 +89,12 @@ class App extends React.Component{
 }
 
 
-const ProtectedRoute = ({component: Component, valid, ...rest}) => {
+const ProtectedRoute = ({component: Component, valid, renewData, polls, ...rest}) => {
   return (
     <Route
       {...rest}
       render={(props) => valid
-        ? <Component valid={valid} {...props}/>
+        ? <Component valid={valid} renewData={renewData} polls={polls} {...props}/>
         : <Redirect to={{pathname: '/login', state: {from: props.location}}} />} />
   );
 };

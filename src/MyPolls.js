@@ -6,31 +6,9 @@ import Poll from './Poll';
 
 export default class MyPolls extends React.Component{
     
-    state = {
-        polls: null
-    }
-    
-    shouldComponentUpdate(nextProps,nextState){
-        return this.state.polls !== nextState;
-    }
-    
-    getData = () => {
-        fetch('/api/mypolls', { method: 'GET' , credentials: 'same-origin'})
-         .then(polls => polls.json())
-              .then(polls => {
-                 this.setState({
-                     polls: polls.polls
-                 })
-        }).catch(err => err);     
-    }
-    
-    componentDidMount(){
-        this.getData();
-    }
 
     render(){
-        const { match } = this.props;
-        const { polls } = this.state;
+        const { match, polls } = this.props;
         const userPolls = polls ? polls.map((i, index) => {
             const slug = i._id;
             return (
@@ -50,7 +28,7 @@ export default class MyPolls extends React.Component{
                     {userPolls}
             </div>
                 <Route path={`${match.url}/:poll`}
-                    render={(props) => <Poll  getData={this.getData} polls={polls} {...props}/>}
+                    render={(props) => <Poll  renewData={this.props.renewData} polls={polls} {...props}/>}
                 />
         </div>
             )

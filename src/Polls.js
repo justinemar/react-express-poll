@@ -9,8 +9,8 @@ export default class Polls extends React.Component {
 
     render(){
         const { match, polls } = this.props;
-        const pollsList = polls ? polls.map(i => (
-            <Link to={`${match.url}/${i._id}`}>
+        const pollsList = polls ? polls.map((i, index) => (
+            <Link key={index} to={`${match.url}/${i._id}`}>
                 <div className="poll">
                     <h1> {i.title} </h1>
                 </div>
