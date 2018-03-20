@@ -67,18 +67,19 @@ router.get('/api/polls', (req, res) => {
 router.post('/api/vote', (req, res) => {
     const id = req.body.pollID;
     const vote = req.body.vote;
-    console.log(id, vote);
-        if(req.session.id){
         db().collection('polls').update(
-            { _id:  require("mongodb").ObjectId(id), "options.key": vote },
-           { $inc: { "options.$.votes" : 1 } }
+           { _id:  require("mongodb").ObjectId(id), "options.key": vote },
+           { $inc: { "options.$.votes" : 1 } }, 
+           {upsert: true, safe: false},
+           function(err, data){
+               if(err) {
+                db().collection('polls').update(
+                  { _id: require("mongodb").ObjectId(id) },
+                  { $push : { "options" : {"key": vote, "votes": 1 } }})
+               }
+           }
         )
-            res.send('ok')
-        } else {
-            res.json({
-                message: 'Unauthorized'
-            })
-        }
+    res.send('ok')
 });
 
 router.post('/api/register', validateMiddle, (req, res) => {

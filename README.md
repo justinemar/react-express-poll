@@ -16,8 +16,8 @@ i chose react for frontend with express and mongodb
  - ~~Fetch user owned polls~~
  - ~~Allow voting on owned polls~~
  - ~~Fetch all public polls~~
- -  Allow voting on public polls
- -  Allow create new poll option
+ - ~~Allow voting on public polls~~
+ - ~~Allow create new poll option~~
  -  Allow share poll on facebook or twitter
  -  Allow deletion for user owned polls
 
