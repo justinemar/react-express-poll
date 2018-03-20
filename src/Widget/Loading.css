@@ -6,10 +6,13 @@
     position: absolute;
     width: 100%;
     height: 100%;
+    text-align: center;
 }
 
-.loading-container h1{
-        color: #171616;
-    text-align: center;
-    margin: 160px 35px 0px 50px;
+
+
+.loading-container img{
+    width: 90px;
+    height: 90px;
+    margin: 180px;
 }
