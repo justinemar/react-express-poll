@@ -60,7 +60,9 @@ router.get('/api/polls', (req, res) => {
         if(err) throw err;
         
 
-        res.send(succ)
+        if(succ){
+            res.send(succ)
+        }
     });
 });
 
@@ -79,7 +81,7 @@ router.post('/api/vote', (req, res) => {
                }
            }
         )
-    res.send('ok')
+        res.send('ok')
 });
 
 router.post('/api/register', validateMiddle, (req, res) => {
@@ -201,9 +203,7 @@ router.post('/api/login', (req, res) => {
 
 router.post('/api/checkAuth', (req, res) => {
     if(req.session.id){
-        res.json({
-            valid: true
-        })
+        res.json({ valid: true, email: req.session.id.email })
     } else {
         res.json({
             message: 'Not set'

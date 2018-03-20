@@ -14,7 +14,8 @@ class App extends React.Component{
       super(props);
       this.state = {
         valid: false,
-        loading: true
+        loading: true,
+        email: null
       };
     }
     
@@ -31,7 +32,8 @@ class App extends React.Component{
             if(res.valid){
                 this.setState({
                   valid: true,
-                  loading: false
+                  loading: false,
+                  email: res.email
                 })
             } else {
               this.setState({
@@ -71,7 +73,7 @@ class App extends React.Component{
 
     render(){
       const HeaderRoute = withRouter(Header);
-      const {valid, loading, polls} = this.state;
+      const {valid, loading, polls, email} = this.state;
         return (
         <div>
       {loading ?
@@ -81,7 +83,7 @@ class App extends React.Component{
           <Route path="/polls/:poll" render={(props) => <PublicPolls polls={polls} renewData={this.renewData} {...props}/>}/>
           <Route path="/register" component={Register}/>
           <Route path="/login"  render={(props) => <Login authUser={this.authUser} valid={valid} {...props}/>} />
-          <ProtectedRoute renewData={this.renewData} polls={polls} valid={valid} path="/mypolls" component={MyPolls}/>
+          <ProtectedRoute renewData={this.renewData} valid={valid} path="/mypolls" component={MyPolls}/>
           <ProtectedRoute valid={valid} path="/newpoll" component={NewPoll}/>
         </div>
             );
@@ -89,12 +91,12 @@ class App extends React.Component{
 }
 
 
-const ProtectedRoute = ({component: Component, valid, renewData, polls, ...rest}) => {
+const ProtectedRoute = ({component: Component, valid, ...rest}) => {
   return (
     <Route
       {...rest}
       render={(props) => valid
-        ? <Component valid={valid} renewData={renewData} polls={polls} {...props}/>
+        ? <Component valid={valid} {...props}/>
         : <Redirect to={{pathname: '/login', state: {from: props.location}}} />} />
   );
 };

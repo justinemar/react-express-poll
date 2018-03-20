@@ -8,9 +8,13 @@ export default class PollModule extends React.Component{
     
     state = {
         selection: undefined,
-        initOption: false
+        initOption: false,
+        polls: null
     }
     
+    componentDidUpdate(){
+        console.log('updat')
+    }
     
     vote = (e) => {
         const pollID = this.props.match.params.poll
@@ -22,6 +26,7 @@ export default class PollModule extends React.Component{
             headers: {'Content-Type': 'application/json'},
         }).then(res => {
           this.props.renewData();
+          this.forceUpdate();
         }).catch(err => console.log(err));
     }
     
@@ -29,6 +34,7 @@ export default class PollModule extends React.Component{
         if(e.target.value === 'create-option'){
             this.setState({
                 initOption: true,
+                selection: null
             })   
         } else {
             this.setState({

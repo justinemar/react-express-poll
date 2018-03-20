@@ -15,7 +15,7 @@ class Login extends React.Component{
     
     componentWillReceiveProps(props){
         const { history , location } = this.props;
-        const redirTo = location.state !== undefined ? location.state.from.pathname : '/public';
+        const redirTo = location.state !== undefined ? location.state.from.pathname : '/polls';
             history.replace({
                 pathname: redirTo
             })
