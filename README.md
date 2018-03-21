@@ -3,7 +3,7 @@
 an introduction to full stack development as part of FreeCodeCamp backend development project
 i chose react for frontend with express and mongodb
 
-Not final demo: https://mern-jstinmhar.c9users.io/#/polls
+Not final demo: https://react-poll-express.herokuapp.com/#/polls
 
 ## Progress
 
