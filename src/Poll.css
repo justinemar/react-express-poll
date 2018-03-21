@@ -19,6 +19,10 @@
     text-decoration: none;
 }
 
+.poll-selected-container{
+    margin-bottom: 20px;
+}
+
 .poll-container{
     background: rgba(0, 0, 0, 0.47);
     padding: 10px;
@@ -35,22 +39,18 @@
 }
 .poll-details{
     margin: 0 auto;
-    float: right;
-    position: relative;
-    left: -50px;
+    max-width: 300px;
 }
 
 .poll-details h2{
     text-transform: capitalize;
     font-family: sans-serif;
     color: #ffffff;
-    max-width: 250px;
     text-align: center;
 }
 
 .poll-vote-action{
     margin: 10px;
-    max-width: 250px;
 }
 
 .poll-choices-wrapper{
