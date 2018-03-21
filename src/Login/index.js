@@ -22,8 +22,7 @@ class Login extends React.Component{
     }
 
     init = () => {
-        const { history } = this.props;
-        const { authUser } = this.props;
+        const { history, authUser } = this.props;
         const email = this.email.value
         const password = this.password.value
        fetch('/api/login', {
@@ -33,12 +32,9 @@ class Login extends React.Component{
             headers: {"Content-Type": "application/json"}
         }).then(res => res.json())
         .then(res => {
-            if(res.valid){
+            if(res.authed){
                 authUser()
-                history.replace({
-                    pathname: '/polls',
-                    data: true
-                })
+                history.push('/polls')
             } else {
                 this.setState({
                     validate: {

@@ -69,12 +69,14 @@ router.get('/api/polls', (req, res) => {
 });
 
 router.post('/api/vote', (req, res) => {
+        console.log('hmm')
     const user_ip = req.headers['x-forwarded-for'];
     const id = req.body.pollID;
     const vote = req.body.vote;
-    const user_email = req.session.id.email === undefined ? 'Guest User' : req.session.id.email; 
+    const identifier = req.session.id === undefined ? user_ip : req.session.id.email; 
+    const userinfo = req.session.id === undefined ? 'Guest User' : req.session.id.email
     db().collection('polls').findOne({
-        _id: require("mongodb").ObjectId(id), "voters.ip": user_ip, "voters.email": user_email
+        _id: require("mongodb").ObjectId(id), "voters.identifier": identifier
     }, (err, found) => {
         if(err) throw err;
         
@@ -90,7 +92,7 @@ router.post('/api/vote', (req, res) => {
             db().collection('polls').update(
                    { _id:  require("mongodb").ObjectId(id), "options.key": vote },
                    { $inc: { "options.$.votes" : 1 } , 
-                     $push: { "voters" : { "ip": user_ip, "email": user_email}}
+                     $push: { "voters" : { "identifier": identifier, "userinfo": userinfo}}
                    }, 
                    { upsert: true, safe: false},
                    function(notfound, data){
@@ -99,7 +101,7 @@ router.post('/api/vote', (req, res) => {
                         db().collection('polls').update(
                           { _id: require("mongodb").ObjectId(id) },
                           { $push : { "options" : {"key": vote, "votes": 1 },
-                                      "voters": {"ip": user_ip, "email": user_email}} 
+                                      "voters": {"identifier": identifier, "userinfo": userinfo}} 
             
                           })
                             res.json({

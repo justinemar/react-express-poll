@@ -123,5 +123,18 @@
     border: 0;
     color: #ffffff;
     margin-top: 10px;
-    max-width: 100%;
+    width: 100%;
+}
+
+.new-option{
+    padding: 5px;
+}
+.new-option input{
+    padding: 5px;
+}
+.new-option p{
+    color: #00caec;
+    font-weight: bold;
+    font-family: 'Segoe UI';
+    margin-bottom: 10px;
 }

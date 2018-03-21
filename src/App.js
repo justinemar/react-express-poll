@@ -59,7 +59,7 @@ class App extends React.Component{
         }).catch(err => err);
     }
     
-    authUser = (cb) => {
+    authUser = () => {
       this.setState({
         valid: true
       });
