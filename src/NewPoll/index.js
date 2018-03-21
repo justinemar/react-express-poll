@@ -39,6 +39,7 @@ class NewPoll extends React.Component{
                     className: res.type
                 }
             })
+            this.props.renewData();
         }).catch(err => {
             return err;
         })

@@ -84,20 +84,20 @@ class App extends React.Component{
           <Route path="/polls/:poll" render={(props) => <PublicPolls polls={polls} renewData={this.renewData} {...props}/>}/>
           <Route path="/register" component={Register}/>
           <Route path="/login"  render={(props) => <Login authUser={this.authUser} valid={valid} {...props}/>} />
-          <ProtectedRoute renewData={this.renewData} valid={valid} path="/mypolls" component={MyPolls}/>
-          <ProtectedRoute valid={valid} path="/newpoll" component={NewPoll}/>
+          <ProtectedRoute valid={valid} path="/mypolls" component={MyPolls}/>
+          <ProtectedRoute renewData={this.renewData} valid={valid} path="/newpoll" component={NewPoll}/>
         </div>
             );
     }
 }
 
 
-const ProtectedRoute = ({component: Component, valid, ...rest}) => {
+const ProtectedRoute = ({component: Component, valid, renewData,...rest}) => {
   return (
     <Route
       {...rest}
       render={(props) => valid
-        ? <Component valid={valid} {...props}/>
+        ? <Component valid={valid} renewData={renewData} {...props}/>
         : <Redirect to={{pathname: '/login', state: {from: props.location}}} />} />
   );
 };
