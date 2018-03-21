@@ -9,7 +9,12 @@ export default class PollModule extends React.Component{
     state = {
         selection: undefined,
         initOption: false,
-        polls: null
+        polls: null,
+        url: encodeURIComponent(window.location.href),
+        validate: {
+            message: null,
+            className: null
+        }
     }
     
     componentDidUpdate(){
@@ -21,12 +26,27 @@ export default class PollModule extends React.Component{
         const vote = this.state.initOption ? this.option.value : this.state.selection;
         fetch('/api/vote', {
             method: 'POST',
-            body: JSON.stringify({ vote: vote, pollID: pollID }),
             credentials: 'same-origin',
+            body: JSON.stringify({ vote: vote, pollID: pollID }),
             headers: {'Content-Type': 'application/json'},
-        }).then(res => {
-          this.props.renewData();
-          this.forceUpdate();
+        }).then(res => res.json())
+        .then(res => {
+            if(res.valid){
+                this.setState({
+                    validate: {
+                        message: res.message,
+                        className: res.type
+                    }
+                })
+              this.props.renewData();
+            } else {
+              this.setState({
+                  validate: {
+                      message: res.message,
+                      className: res.type
+                  }
+              })
+            }
         }).catch(err => console.log(err));
     }
     
@@ -54,14 +74,18 @@ export default class PollModule extends React.Component{
 		  '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
 		  '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3', 
 		  '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
-        const { selection, initOption } = this.state;
-        const { selectedPoll, data } = this.props;
+        const { selection, initOption , url, validate} = this.state;
+        const { selectedPoll, data, match} = this.props;
         const poll = selectedPoll ? selectedPoll : data;
         return (
                 <div>
                 <div className="poll-selected-container">
                     { poll ?
                     <div className="poll-details">
+                      { validate.message ? 
+                        <p className={validate.className}>{validate.message}</p>
+                        :
+                        null}
                         <h2> {poll[0].title}</h2> 
                         <div className="poll-vote-action">
                             <div className="poll-choices-wrapper">
@@ -95,6 +119,11 @@ export default class PollModule extends React.Component{
                               <Tooltip />
                           <Legend />
                         </PieChart>
+                        <a target='_blank' href={`https://twitter.com/intent/tweet?text=i need your opinionts&url=${url}&via=justimhar`}>
+                        <div className="twitter-share-wrapper">
+                            <button> Share on twitter! </button>
+                        </div>
+                        </a>
                       </div>
                             : 
                         <p> Loading... </p> }

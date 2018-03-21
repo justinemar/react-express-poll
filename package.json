@@ -10,8 +10,8 @@
     "build": "webpack --watch --config webpack.config.js --mode development"
   },
   "keywords": [],
-   "engines" : { 
-    "node" : "^6.11.2" 
+  "engines": {
+    "node": "^6.11.2"
   },
   "author": "",
   "license": "ISC",
@@ -46,6 +46,7 @@
     "dotenv": "^5.0.1",
     "ejs": "^2.5.7",
     "express": "^4.16.3",
+    "ip": "^1.1.5",
     "js-cookie": "^2.2.0",
     "mongodb": "^3.0.4",
     "react": "^16.2.0",

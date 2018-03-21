@@ -49,6 +49,7 @@ class App extends React.Component{
     
     
     renewData = () => {
+      this.forceUpdate();
       fetch('/api/polls', { method: 'GET', credentials: 'same-origin'})
         .then(res => res.json())
         .then(res => {

@@ -44,6 +44,8 @@
     text-transform: capitalize;
     font-family: sans-serif;
     color: #ffffff;
+    max-width: 250px;
+    text-align: center;
 }
 
 .poll-vote-action{
@@ -113,4 +115,13 @@
 
 .poll:hover{
     background: black;
+}
+
+.twitter-share-wrapper button{
+    background: #1DA1F2;
+    padding: 10px;
+    border: 0;
+    color: #ffffff;
+    margin-top: 10px;
+    max-width: 100%;
 }

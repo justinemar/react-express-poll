@@ -5,6 +5,8 @@ const publicDir = path.resolve(__dirname, '../public');
 const validator = require("validator");
 const db = require("../connection/mongo").getDB;
 const init = require("../connection/mongo");
+const ip = require("ip");
+
 init.connect(() => {});
 
 function validateMiddle(req, res, next){
@@ -67,21 +69,57 @@ router.get('/api/polls', (req, res) => {
 });
 
 router.post('/api/vote', (req, res) => {
+    const user_ip = req.headers['x-forwarded-for'];
     const id = req.body.pollID;
     const vote = req.body.vote;
-        db().collection('polls').update(
-           { _id:  require("mongodb").ObjectId(id), "options.key": vote },
-           { $inc: { "options.$.votes" : 1 } }, 
-           {upsert: true, safe: false},
-           function(err, data){
-               if(err) {
-                db().collection('polls').update(
-                  { _id: require("mongodb").ObjectId(id) },
-                  { $push : { "options" : {"key": vote, "votes": 1 } }})
-               }
-           }
-        )
-        res.send('ok')
+    const user_email = req.session.id.email === undefined ? 'Guest User' : req.session.id.email; 
+    db().collection('polls').findOne({
+        _id: require("mongodb").ObjectId(id), "voters.ip": user_ip, "voters.email": user_email
+    }, (err, found) => {
+        if(err) throw err;
+        
+        
+        if(found){
+            console.log(found)
+            res.json({
+                valid: false,
+                message: 'You already voted!',
+                type: 'error-p'
+            })    
+        } else {
+            db().collection('polls').update(
+                   { _id:  require("mongodb").ObjectId(id), "options.key": vote },
+                   { $inc: { "options.$.votes" : 1 } , 
+                     $push: { "voters" : { "ip": user_ip, "email": user_email}}
+                   }, 
+                   { upsert: true, safe: false},
+                   function(notfound, data){
+                       if(notfound) {
+                        console.log('not found')
+                        db().collection('polls').update(
+                          { _id: require("mongodb").ObjectId(id) },
+                          { $push : { "options" : {"key": vote, "votes": 1 },
+                                      "voters": {"ip": user_ip, "email": user_email}} 
+            
+                          })
+                            res.json({
+                                valid: true,
+                                message: 'New option voted and added!',
+                                type: 'success-p'
+                            })
+                        }
+                        
+                       if(data){
+                            res.json({
+                                valid: true,
+                                message: 'Voted!',
+                                type: 'success-p'
+                            })
+                       }
+                   }
+            )
+        }
+    })
 });
 
 router.post('/api/register', validateMiddle, (req, res) => {
@@ -141,6 +179,7 @@ router.post('/api/newpoll',  (req, res, next) => {
                 pollData['author'] = data.email;
                 pollData['title'] = escapeTitle;
                 pollData['options'] = [];
+                pollData['voters'] = [];
                 escapeOptions.split(',').forEach(i => {
                     pollData['options'].push({key: i, votes: 0})
                 })

@@ -33,7 +33,7 @@ class Login extends React.Component{
             headers: {"Content-Type": "application/json"}
         }).then(res => res.json())
         .then(res => {
-            if(res.authed){
+            if(res.valid){
                 authUser()
                 history.replace({
                     pathname: '/polls',

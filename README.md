@@ -20,7 +20,8 @@ Not final demo: https://react-poll-express.herokuapp.com/#/polls
  - ~~Fetch all public polls~~
  - ~~Allow voting on public polls~~
  - ~~Allow create new poll option~~
- -  Allow share poll on facebook or twitter
+ - ~~Allow share poll on facebook or twitter~~
+ - ~~Implement unique voting~~
  -  Allow deletion for user owned polls
 
 ## Required User Stories
