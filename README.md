@@ -22,7 +22,7 @@ Not final demo: https://react-poll-express.herokuapp.com/#/polls
  - ~~Allow create new poll option~~
  - ~~Allow share poll on facebook or twitter~~
  - ~~Implement unique voting~~
- -  Allow deletion for user owned polls
+ - ~~Allow deletion for user owned polls~~
 
 ## Required User Stories
 Here are the specific user stories you should implement for this project:
@@ -46,3 +46,6 @@ User Story: As an authenticated user, if I don't like the options on a poll, I c
 You can get feedback on your project by sharing it with your friends on Facebook.
 
 
+**MIT**
+
+Open to anyone 
