@@ -69,7 +69,6 @@ router.get('/api/polls', (req, res) => {
 });
 
 router.post('/api/vote', (req, res) => {
-        console.log('hmm')
     const user_ip = req.headers['x-forwarded-for'];
     const id = req.body.pollID;
     const vote = req.body.vote;
@@ -82,7 +81,6 @@ router.post('/api/vote', (req, res) => {
         
         
         if(found){
-            console.log(found)
             res.json({
                 valid: false,
                 message: 'You already voted!',
@@ -97,18 +95,17 @@ router.post('/api/vote', (req, res) => {
                    { upsert: true, safe: false},
                    function(notfound, data){
                        if(notfound) {
-                        console.log('not found')
                         db().collection('polls').update(
                           { _id: require("mongodb").ObjectId(id) },
                           { $push : { "options" : {"key": vote, "votes": 1 },
                                       "voters": {"identifier": identifier, "userinfo": userinfo}} 
             
-                          })
+                          });
                             res.json({
                                 valid: true,
                                 message: 'New option voted and added!',
                                 type: 'success-p'
-                            })
+                            });
                         }
                         
                        if(data){
@@ -116,12 +113,12 @@ router.post('/api/vote', (req, res) => {
                                 valid: true,
                                 message: 'Voted!',
                                 type: 'success-p'
-                            })
+                            });
                        }
                    }
-            )
+            );
         }
-    })
+    });
 });
 
 router.post('/api/register', validateMiddle, (req, res) => {
@@ -134,7 +131,7 @@ router.post('/api/register', validateMiddle, (req, res) => {
             res.json({
                 message: 'Email already exists!',
                 type: 'error-p'
-            })
+            });
         } else {
             db().collection('users').save(req.body, (err, succ) => {
                 if(err){
@@ -143,12 +140,12 @@ router.post('/api/register', validateMiddle, (req, res) => {
                     res.json({
                         message: 'Success!',
                         type: 'success-p'
-                    })
+                    });
                 }
-            })
+            });
         }
-    })
-})
+    });
+});
 
 
 router.post('/api/newpoll',  (req, res, next) => {
@@ -161,14 +158,14 @@ router.post('/api/newpoll',  (req, res, next) => {
                 _id: require("mongodb").ObjectId(req.session.id._id)
             }, (err, succ) => {
                 if(err) {
-                    reject(err)
+                    reject(err);
                 }
                 
                 if(succ){
-                    resolve(succ)
+                    resolve(succ);
                 }
-            })
-        })
+            });
+        });
         
         //-//-//-//-//-//-//-//-//-//-//-//-//-//-//
                 // SET POLL DATA //
@@ -183,8 +180,8 @@ router.post('/api/newpoll',  (req, res, next) => {
                 pollData['options'] = [];
                 pollData['voters'] = [];
                 escapeOptions.split(',').forEach(i => {
-                    pollData['options'].push({key: i, votes: 0})
-                })
+                    pollData['options'].push({key: i, votes: 0});
+                });
                 return pollData;
             }).then(pollData => {
                 db().collection('polls').save(pollData, (err, succ) => {
@@ -198,8 +195,9 @@ router.post('/api/newpoll',  (req, res, next) => {
                     }
                 });
             }).catch(err => {
-                    res.json({
-                        message: 'Error:' + err,
+                //Throw error for invalid requests
+                    res.status(500).json({
+                        message: 'Error: Internal Server Error',
                         type: 'error-p'
                     });
             });
@@ -216,11 +214,11 @@ router.post('/api/logout', (req, res) => {
     if(req.session.id){
         req.session = null;
         res.json({
-            unauth: true})
+            unauth: true});
     } else {
-        res.status(500).send('Internal Server Error')
+        res.status(500).send('Internal Server Error');
     }
-})
+});
 
 router.post('/api/login', (req, res) => {
    db().collection('users').findOne({
@@ -232,23 +230,49 @@ router.post('/api/login', (req, res) => {
             req.session.id = succ;
             res.json({
                 authed: true
-            })
+            });
         } else {
             res.json({
                 message: 'Invalid Email or Password',
                 type: 'error-p'
-            })
+            });
         }
-    })
-})
+    });
+});
+
+router.post('/api/delete', (req, res) => {
+    const email = req.session.id.email
+    const targetPoll = req.body.id;
+    if(req.session.id){
+        db().collection('polls').deleteOne({ 
+            _id: require("mongodb").ObjectId(targetPoll) ,
+             author: email
+        }, (err, succ) => {
+            if(err) throw err;
+            
+            
+            if(succ){
+                res.json({
+                    message: 'Success',
+                    type: 'success-p'
+                })
+            }
+        })
+    } else {
+        res.status(500).json({
+            message: 'Internal Server Error',
+            type: 'error-p'
+        })
+    }
+});
 
 router.post('/api/checkAuth', (req, res) => {
     if(req.session.id){
-        res.json({ valid: true, email: req.session.id.email })
+        res.json({ valid: true, email: req.session.id.email });
     } else {
         res.json({
             message: 'Not set'
-        })
+        });
     }
 });
 

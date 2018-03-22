@@ -81,7 +81,7 @@ class App extends React.Component{
         <Loading/> : null }
           <HeaderRoute valid={valid} unAuthUser={this.unAuthUser}/>
           <Route exact path="/polls" render={(props) => <Polls polls={polls} {...props}/>}/>
-          <Route path="/polls/:poll" render={(props) => <PublicPolls polls={polls} renewData={this.renewData} {...props}/>}/>
+          <Route path="/polls/:poll" render={(props) => <PublicPolls email={email} polls={polls} renewData={this.renewData} {...props}/>}/>
           <Route path="/register" component={Register}/>
           <Route path="/login"  render={(props) => <Login authUser={this.authUser} valid={valid} {...props}/>} />
           <ProtectedRoute valid={valid} path="/mypolls" component={MyPolls}/>

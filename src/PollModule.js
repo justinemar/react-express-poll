@@ -63,6 +63,26 @@ export default class PollModule extends React.Component{
             })   
         }
     }
+    
+    deletePoll = () => {
+        const pollID = this.props.match.params.poll;
+        fetch('/api/delete', {
+            method: 'POST',
+            credentials: 'same-origin',
+            body: JSON.stringify({id: pollID}),
+            headers: { 'Content-Type': 'application/json' },
+        }).then(res => res.json())
+        .then(res => {
+            this.setState({
+                validate: {
+                    message: res.message,
+                    className: res.type
+                }
+            })
+            this.props.history.push('/polls')
+        }).catch(err => console.log(err))
+    }
+    
     render(){
         const COLORS = ['#3DCC91', '#FFB366', '#FF7373', '#FFCC00', '#3B22FF', '#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', 
 		  '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
@@ -124,6 +144,10 @@ export default class PollModule extends React.Component{
                             <button> Share on twitter! </button>
                         </div>
                         </a>
+                        {this.props.email === selectedPoll[0].author ?
+                        <div className="delete-poll-wrapper">
+                            <button onClick={this.deletePoll}> Delete Poll </button>
+                        </div> : null }
                       </div>
                             : 
                         <p> Loading... </p> }

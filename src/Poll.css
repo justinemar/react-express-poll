@@ -138,3 +138,13 @@
     font-family: 'Segoe UI';
     margin-bottom: 10px;
 }
+
+
+.delete-poll-wrapper button{
+    background: #b12a2a;
+    padding: 10px;
+    border: 0;
+    color: #ffffff;
+    margin-top: 10px;
+    width: 100%;
+}
